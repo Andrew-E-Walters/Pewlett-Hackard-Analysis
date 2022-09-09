@@ -65,8 +65,48 @@ ON (e.emp_no = ti.emp_no)
 WHERE (birth_date BETWEEN '1965-01-01' AND '1965-12-31') AND (ti.to_date = '9999-01-01')
 ORDER BY emp_no ASC, ti.to_date DESC;
 
+-- Extra Charts for Deliverable #3
+
+-- Mentor Eligibility Count
+SELECT *
+INTO mentor_titles
+FROM  (
+SELECT DISTINCT ON (me.title) me.title, count(me.emp_no) as "count_of_emp"
+FROM mentorship_eligibilty AS me
+GROUP BY me.title
+ORDER BY me.title, count(me.emp_no) desc
+	) retiring_titles	
+ORDER  BY count_of_emp desc, title;
+
+--Non Retirement age Employee Eligibilty
+SELECT DISTINCT ON (e.emp_no)
+e.emp_no,
+e.first_name,
+e.last_name,
+e.birth_date,
+ti.from_date,
+ti.to_date,
+ti.title
+INTO employee_eligibilty
+FROM employees as e
+INNER JOIN titles AS ti
+ON (e.emp_no = ti.emp_no)
+WHERE (birth_date between '1956-01-01' AND '1965-12-31') AND (ti.to_date = '9999-01-01')
+ORDER BY emp_no ASC, ti.to_date DESC;
+
+-- Non Retirement age Employee Eligibilty count
+SELECT *
+INTO non_retirement_titles
+FROM  (
+SELECT DISTINCT ON (ee.title) ee.title, count(ee.emp_no) as "count_of_emp"
+FROM employee_eligibilty AS ee
+GROUP BY ee.title
+ORDER BY ee.title, count(ee.emp_no) desc
+	) retiring_titles	
+ORDER  BY count_of_emp desc, title;
 
 
+--Startet Code Template
 -- Use Dictinct with Orderby to remove duplicate rows
 SELECT DISTINCT ON (______) _____,
 ______,
